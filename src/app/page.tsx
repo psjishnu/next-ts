@@ -1,5 +1,6 @@
 "use client";
 import ProductTile from "@/components/ProductTile";
+import { Product } from "@/models";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
@@ -11,24 +12,30 @@ const Main = styled.div`
 `;
 
 const Home = () => {
-  // Use the Product type to type the state
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     axios
-      .get("https://dummyjson.com/products")
+      .get<Product[]>("/api/v1/products")
       .then((res) => {
-        setProducts(res.data.products); // Assuming the API response contains a `products` array
+        setProducts(res.data);
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Error fetching products:", err);
       });
   }, []);
 
   return (
     <Main>
       {products.map((product) => (
-        <ProductTile key={product.id} product={product} />
+        <ProductTile
+          key={product.id}
+          product={{
+            thumbnail: product.thumbnail,
+            title: product.title,
+            id: product.id,
+          }}
+        />
       ))}
     </Main>
   );

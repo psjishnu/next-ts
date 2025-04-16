@@ -47,7 +47,6 @@ const Title = styled.p`
 interface Product {
   thumbnail: string;
   title: string;
-  d: false;
   id: number;
 }
 
